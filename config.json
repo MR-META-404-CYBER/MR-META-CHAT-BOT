@@ -1,5 +1,5 @@
 {
-  "Author": "SHAHADAT SAHU",
+  "Author": "ZIHAD AHMED",
   "version": "2.0.0",
   "language": "en",
   "DeveloperMode": false,
@@ -16,11 +16,11 @@
   "reactUnsend": ["😡", "🤧", "😤", "😠"],
 
   "ADMINBOT": [
-    "100001039692046",
-    "61586663640809",
-    "100044713412032"
+    "61588247636912",
+    "61588247636912",
+    "61588247636912"
   ],
-  "NDH": ["100044713412032"],
+  "NDH": ["61588247636912"],
   "adminOnly": false,
   "ndhOnly": false,
   "adminPaOnly": false,
