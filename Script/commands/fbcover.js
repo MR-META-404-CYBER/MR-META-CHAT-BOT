@@ -1,69 +1,76 @@
-const axios = require("axios");
-const fs = require("fs-extra");
+Const axios = require("axios");
+
+const baseApiUrl = async () => {
+  const base = await axios.get(
+    `https://raw.githubusercontent.com/Mostakim0978/D1PT0/refs/heads/main/baseApiUrl.json`,
+  );
+  return base.data.api;
+};
 
 module.exports.config = {
   name: "fbcover",
-  version: "2.0.0",
+  version: "6.9",
   hasPermssion: 0,
-  credits: "Gemini AI",
-  description: "প্রফেশনাল ফেসবুক কভার ফটো মেকার",
+  credits: "Dipto",
+  description: "Facebook cover",
   usePrefix: true,
-  commandCategory: "Edit",
-  usages: "v1/v2 - নাম - টাইটেল - ঠিকানা - মেইল - ফোন - কালার",
+  prefix: true,
+  commandCategory: "Cover",
+  category: " cover",
+  usages: "name - title - address - email - phone - color (default = white)",
   cooldowns: 5,
 };
-
 module.exports.run = async function ({ api, event, args, Users }) {
-  const { threadID, messageID, senderID, type, messageReply } = event;
-
-  // ইউজার ইনপুট চেক
-  if (!args[0]) {
-    return api.sendMessage(
-      `❌ ভুল ফরম্যাট!\n\nসঠিক নিয়ম:\nfbcover v1 - Dipto - Designer - Dhaka - dipto@mail.com - 017xx - white\n\n(সবগুলোর মাঝে একটি করে '-' হাইফেন দাও)`,
-      threadID,
-      messageID
-    );
+  const dipto = args.join(" ");
+  let id;
+  if (event.type === "message_reply") {
+    id = event.messageReply.senderID;
+  } else {
+    id = Object.keys(event.mentions)[0] || event.senderID;
   }
-
-  // ডাটা প্রসেসিং
-  const content = args.join(" ").split("-").map(item => item.trim());
-  const v = content[0] || "v1";
-  const name = content[1] || "No Name";
-  const subname = content[2] || "Designer";
-  const address = content[3] || "Bangladesh";
-  const email = content[4] || "info@mail.com";
-  const phone = content[5] || "017XXXXXXXX";
-  const color = content[6] || "white";
-
-  // আইডি সেট করা (রিপ্লাই দিলে তার আইডি, না দিলে নিজের আইডি)
-  let id = type === "message_reply" ? messageReply.senderID : Object.keys(event.mentions)[0] || senderID;
-  const senderName = await Users.getNameUser(senderID);
-
-  api.sendMessage(`⏳ একটু অপেক্ষা করো ${senderName}, তোমার কভার ফটো তৈরি হচ্ছে...`, threadID, (err, info) => {
-    setTimeout(() => api.unsendMessage(info.messageID), 4000);
-  }, messageID);
-
-  try {
-    // API URL - এখানে আমি তোর আগের API টাকেই ব্যবহার করেছি
-    // যদি এই API কাজ না করে, তবে বুঝতে হবে সার্ভার ডাউন।
-    const apiUrl = `https://dipto-api.onrender.com/cover/${v}?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&number=${encodeURIComponent(phone)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&colour=${encodeURIComponent(color)}&uid=${id}`;
-
-    const path = __dirname + `/cache/fbcover_${senderID}.png`;
-    const response = await axios.get(apiUrl, { responseType: "arraybuffer" });
-    
-    fs.writeFileSync(path, Buffer.from(response.data, "utf-8"));
-
-    return api.sendMessage({
-      body: `✅ কভার ফটো তৈরি সম্পন্ন!\n\n👤 নাম: ${name}\n🎨 ভার্সন: ${v}\n📫 ইমেইল: ${email}\n📍 ঠিকানা: ${address}`,
-      attachment: fs.createReadStream(path)
-    }, threadID, () => fs.unlinkSync(path), messageID);
-
-  } catch (error) {
-    console.error(error);
+  var nam = await Users.getNameUser(id);
+  if (!dipto) {
     return api.sendMessage(
-      `⚠️ দুঃখিত! কভার ফটো তৈরি করা যায়নি।\nসম্ভবত API সার্ভারটি বর্তমানে অফলাইনে আছে। দয়া করে পরে আবার চেষ্টা করো।`,
-      threadID,
-      messageID
+      `❌| wrong \ntry ${global.config.PREFIX}fbcover v1/v2/v3 - name - title - address - email - phone - color (default = white)`,
+      event.threadID,
+      event.messageID,
     );
+  } else {
+    const msg = dipto.split("-");
+    const v = msg[0].trim() || "v1";
+    const name = msg[1].trim() || " ";
+    const subname = msg[2].trim() || " ";
+    const address = msg[3].trim() || " ";
+    const email = msg[4].trim() || " ";
+    const phone = msg[5].trim() || " ";
+    const color = msg[6].trim() || "white";
+    api.sendMessage(
+      `Processing your cover,Wait koro baby < 😘`,
+      event.threadID,
+      (err, info) =>
+        setTimeout(() => {
+          api.unsendMessage(info.messageID);
+        }, 4000),
+    );
+    const img = `${await baseApiUrl()}/cover/${v}?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&number=${encodeURIComponent(phone)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&colour=${encodeURIComponent(color)}&uid=${id}`;
+
+    try {
+      const response = await axios.get(img, { responseType: "stream" });
+      const attachment = response.data;
+      api.sendMessage(
+        {
+          body: `✿━━━━━━━━━━━━━━━━━━━━━━━━━━━✿\n🔵𝗙𝗜𝗥𝗦𝗧 𝗡𝗔𝗠𝗘: ${name}\n⚫𝗦𝗘𝗖𝗢𝗡𝗗 𝗡𝗔𝗠𝗘:${subname}\n⚪𝗔𝗗𝗗𝗥𝗘𝗦𝗦: ${address}\n📫𝗠𝗔𝗜𝗟: ${email}\n☎️𝗣𝗛𝗢𝗡𝗘 𝗡𝗢.: ${phone}\n☢️𝗖𝗢𝗟𝗢𝗥: ${color}\n💁𝗨𝗦𝗘𝗥 𝗡𝗔𝗠𝗘: ${nam}\n✅𝗩𝗲𝗿𝘀𝗶𝗼𝗻 : ${v}\n✿━━━━━━━━━━━━━━━━━━━━━━━━━━━✿`,
+          attachment,
+        },
+        event.threadID,
+        event.messageID,
+      );
+    } catch (error) {
+      console.error(error);
+      api.sendMessage(
+        "An error occurred while generating the FB cover.",
+        event.threadID,
+      );
+    }
   }
 };
