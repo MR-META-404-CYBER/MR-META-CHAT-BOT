@@ -4,7 +4,7 @@ const apiList = "https://raw.githubusercontent.com/shahadat-sahu/SAHU-API/refs/h
 const getMainAPI = async () => (await axios.get(apiList)).data.simsimi;
 
 module.exports.config = {
- name: "baby,","Jannat",
+ name: "baby," "Jannat",
  version: "1.0.3",
  hasPermssion: 0,
  credits: "ULLASH",
