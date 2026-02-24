@@ -1,39 +1,60 @@
 const axios = require("axios");
 
-// API URL fetch করার ফাংশন
-const baseApiUrl = async () => {
+const getBaseUrl = async () => {
   try {
-    const base = await axios.get(
-      `https://raw.githubusercontent.com/Mostakim0978/D1PT0/refs/heads/main/baseApiUrl.json`,
-    );
-    return base.data.api;
+    const res = await axios.get(`https://raw.githubusercontent.com/Mostakim0978/D1PT0/refs/heads/main/baseApiUrl.json`);
+    return res.data.api;
   } catch (e) {
-    return "https://dipto-api.onrender.com"; // ব্যাকআপ যদি উপরের লিংক কাজ না করে
+    // যদি উপরের লিঙ্ক কাজ না করে তবে সরাসরি এই লিঙ্কটা ট্রাই করবে
+    return "https://dipto-api.onrender.com"; 
   }
 };
 
 module.exports.config = {
   name: "fbcover",
-  version: "7.0",
+  version: "7.1",
   hasPermssion: 0,
   credits: "Dipto",
-  description: "Facebook cover generator",
+  description: "Facebook cover maker",
   usePrefix: true,
   commandCategory: "Cover",
   usages: "v1/v2 - name - subname - address - email - phone - color",
-  cooldowns: 5,
+  cooldowns: 2,
 };
 
 module.exports.run = async function ({ api, event, args, Users }) {
-  const { threadID, messageID, senderID, type, messageReply, mentions } = event;
-  const input = args.join(" ");
+  const { threadID, messageID, senderID, type, messageReply } = event;
   
-  let id = type === "message_reply" ? messageReply.senderID : Object.keys(mentions)[0] || senderID;
-  const userName = await Users.getNameUser(id);
+  // ইনপুট চেক
+  if (args.length === 0) {
+    return api.sendMessage(`❌ সঠিক ফরম্যাট ব্যবহার করো!\n\nউদাহরণ:\nfbcover v1 - Dipto - Designer - Dhaka - dipto@mail.com - 017xx - white`, threadID, messageID);
+  }
 
-  if (!input) {
-    return api.sendMessage(
-      `❌ ভুল ফরম্যাট!\nব্যবহার করুন: fbcover v1 - নাম - পদবী - ঠিকানা - ইমেইল - ফোন - রঙ`,
+  const content = args.join(" ").split("-").map(item => item.trim());
+  const v = content[0] || "v1";
+  const name = content[1] || "None";
+  const subname = content[2] || "None";
+  const address = content[3] || "None";
+  const email = content[4] || "None";
+  const phone = content[5] || "None";
+  const color = content[6] || "white";
+
+  const id = type === "message_reply" ? messageReply.senderID : Object.keys(event.mentions)[0] || senderID;
+  const nameUser = await Users.getNameUser(id);
+
+  api.sendMessage("⌛ একটু দাঁড়াও জানু, তোমার কভারটা তৈরি করছি...", threadID, (err, info) => {
+    setTimeout(() => api.unsendMessage(info.messageID), 3000);
+  }, messageID);
+
+  try {
+    const base = await getBaseUrl();
+    // ফাইনাল ইমেজ লিঙ্ক
+    const imageUrl = `${base}/cover/${v}?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&number=${encodeURIComponent(phone)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&colour=${encodeURIComponent(color)}&uid=${id}`;
+
+    const response = await axios.get(imageUrl, { responseType: "stream" });
+
+    return api.sendMessage({
+      body: `✅ কভার তৈরি হয়েছে!\n\n👤 নাম: ${name
       threadID,
       messageID
     );
