@@ -42,33 +42,21 @@ module.exports.run = async function ({ api, event, args, Users, Threads }) {
 │
 ╰───────⭓
 
-╭⭓ ⪩ 𝗢𝗪𝗡𝗘𝗥 𝗜𝗡𝗙𝗢 ⪨
-│
-├─ 👑 𝗡𝗮𝗺𝗲 : 𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐈𝐬𝐥𝐚𝐦
-├─ 📲 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸 :
-│ facebook.com/61575698041722
-├─ 💌 𝗠𝗲𝘀𝘀𝗲𝗻𝗴𝗲𝗿 :
-│ m.me/61575698041722
-├─ 📞 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 :
-│ wa.me/+8801882333052
-│
-╰───────⭓
-
-╭⭓ ⪩ 𝗔𝗖𝗧𝗜𝗩𝗜𝗧𝗜𝗘𝗦 ⪨
-│
-├─ ⏳ 𝗔𝗰𝘁𝗶𝘃𝗲 𝗧𝗶𝗺𝗲 : ${hours}h ${minutes}m ${seconds}s
-├─ 📣 𝗚𝗿𝗼𝘂𝗽𝘀 : ${totalThreads}
-├─ 🧿 𝗧𝗼𝘁𝗮𝗹 𝗨𝘀𝗲𝗿𝘀 : ${totalUsers}
-╰───────⭓
-
-❤️ 𝗧𝗵𝗮𝗻𝗸𝘀 𝗳𝗼𝗿 𝘂𝘀𝗶𝗻𝗴 🌺
- 😍─꯭─⃝‌‌𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐂𝐡𝐚𝐭 𝐁𝐨𝐭😘`;
+┌───────────────⭓
+│ 𝗢𝗪𝗡𝗘𝗥 𝗗𝗘𝗧𝗔𝗜𝗟𝗦
+├───────────────
+│ 👤 Name : AHMED
+│ 🚹 Gender : Male 
+│ ❤️ Relation : Single
+│ 🎂 Age : 18+
+│ 🕌 Religion : Islam
+└───────────────⭓`;
 
  const imgLinks = [
- "https://i.imgur.com/zqsuJnX.jpeg",
- "https://i.imgur.com/sxSn1K3.jpeg",
- "https://i.imgur.com/wu0iDqS.jpeg",
- "https://i.imgur.com/Huz3nAE.png"
+ "https://i.imgur.com/a/VdV35RF.jpeg",
+ "https://i.imgur.com/a/VdV35RF.jpeg",
+ "https://i.imgur.com/a/VdV35RF.jpeg",
+ "https://i.imgur.com/a/VdV35RF.jpeg"
  ];
 
  const imgLink = imgLinks[Math.floor(Math.random() * imgLinks.length)];
